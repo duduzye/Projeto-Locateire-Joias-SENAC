@@ -1,0 +1,15 @@
+<!DOCTYPE html><html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Nova venda')}"></head><body>
+<div class="app"><aside th:replace="~{fragments/layout :: menu('vendas')}"></aside><main class="content">
+ <header th:replace="~{fragments/layout :: topo('Nova venda','Monte o pedido; o sistema atualiza estoque e total automaticamente.')}"></header>
+ <div th:replace="~{fragments/layout :: alertas}"></div>
+ <section class="panel form-panel"><form method="post" th:action="@{/vendas/salvar}" id="formVenda"><div class="panel-head"><div><div class="eyebrow">REGISTRAR PEDIDO</div><h2>Dados da venda</h2></div></div>
+ <label>Cliente *<select name="cliente" required><option value="">Selecione o cliente...</option><option th:each="c:${clientes}" th:value="${c.codigo}" th:text="${c.nome}"></option></select></label>
+ <div class="panel-head items-title"><div><h2>Produtos do pedido</h2><p class="hint">Somente itens com estoque podem ser vendidos.</p></div><button class="btn btn-outline" type="button" id="adicionarItem">+ Adicionar item</button></div>
+ <div id="itensVenda" class="items-list"></div>
+ <div class="checkout-total"><span>Subtotal estimado</span><strong id="totalEstimado">R$ 0,00</strong></div>
+ <div class="form-actions"><a class="btn btn-outline" th:href="@{/vendas}">Cancelar</a><button class="btn btn-primary" type="submit">Concluir venda e emitir nota →</button></div>
+ <p class="hint">A nota é acadêmica e não substitui um documento fiscal autorizado pela SEFAZ.</p>
+ </form></section>
+</main></div>
+<template id="modeloItem"><div class="item-row"><label>Produto *<select name="produto" class="produtoSelect" required><option value="">Escolha a joia...</option><option th:each="p:${produtos}" th:value="${p.codigo}" th:attr="data-preco=${p.preco},data-estoque=${p.estoque}" th:text="${p.nome + ' · R$ ' + #numbers.formatDecimal(p.preco,1,'POINT',2,'COMMA') + ' · ' + p.estoque + ' disp.'}"></option></select></label><label>Quantidade *<input name="quantidade" class="quantidadeInput" type="number" min="1" value="1" required></label><button type="button" class="remove-item" aria-label="Remover item">×</button></div></template>
+<script th:src="@{/js/vendas.js}"></script></body></html>

@@ -1,0 +1,4 @@
+<!DOCTYPE html><html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Nota não encontrada')}"></head><body>
+<div class="app"><aside th:replace="~{fragments/layout :: menu('vendas')}"></aside><main class="content">
+ <header th:replace="~{fragments/layout :: topo('Nota não encontrada','Não encontramos um comprovante acadêmico para essa venda.')}"></header><div th:replace="~{fragments/layout :: alertas}"></div><a class="btn btn-outline" th:href="@{/vendas}">← Voltar às vendas</a>
+</main></div></body></html>

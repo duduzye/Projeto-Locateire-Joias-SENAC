@@ -1,0 +1,68 @@
+ATELIER JOALHERIA | PROJETO PRONTO PARA O INTELLIJ IDEA
+Java 21 + Spring Boot + Thymeleaf + JDBC + MySQL Workbench (MySQL Server)
+
+1) FACA BACKUP DO BANCO ATUAL ANTES DE ALTERAR SQL!
+
+2) DECIDA QUAL SCRIPT UTILIZAR (NO WORKBENCH):
+   * Ja tem o banco BD_JOALHERIA com seus dados?
+     -> Rode APENAS sql/02_MIGRACAO_SEM_APAGAR_DADOS.sql.
+     -> Preserva produtos, clientes, vendas, notas etc.
+     -> Gerente e funcionaria ficam DESATIVADOS, sem acesso.
+     -> Os usuarios historicos permanecem para nao quebrar as referencias de vendas.
+   * Quer criar tudo do zero, descartando os dados anteriores?
+     -> Rode sql/01_BANCO_NOVO_APAGA_DADOS.sql.
+     -> APAGA BD_JOALHERIA antes de recriar.
+     -> Apenas o perfil DONA e cadastrado desde o inicio.
+
+3) ABRA O PROJETO NO INTELLIJ:
+   File > Open > selecione a pasta Joalheria_Dona_IntelliJ (com pom.xml).
+   Clique em Load Maven Project / Sync Maven para instalar dependencias.
+   Na aba Project Structure, escolha o JDK 21.
+   Execute JoalheriaApplication.java (icone verde / Run).
+   Na primeira vez, o Maven precisa acessar a internet para baixar bibliotecas.
+   NAO e necessario executar o arquivo .jar do exemplo do professor.
+
+4) CONFIGURACAO DE ACESSO AO MYSQL:
+   O arquivo config/application-local.properties ja esta preenchido com os dados
+   fornecidos para esta maquina. Se trocar a senha ou o usuario MySQL,
+   edite esse arquivo. O servidor MySQL precisa estar em execucao na porta 3306.
+   O arquivo esta no .gitignore: NAO ENVIE esse arquivo ao GitHub.
+   A conexao e com BD_JOALHERIA; o nome do banco ja esta no application.properties.
+
+5) ACESSE:
+   http://localhost:8080
+   Login da APLICACAO (nao e o login do MySQL):
+      Usuario: dona
+      Senha inicial se criou do zero: 123456
+   Se seu banco JA existia e voce mudou a senha da dona, use essa senha antiga.
+   Depois, clique em 'Conta da proprietaria' e troque a senha por uma forte.
+
+6) FUNCIONALIDADES:
+   Login protegido com sessao e CSRF (Spring Security), acesso apenas da dona.
+   Dashboard por periodo, CRUD com desativacao logica de produtos/clientes.
+   Entradas/saidas de estoque, controle por procedures.
+   Vendas com varios itens, baixa automatica de estoque, transacao unica.
+   Notas academicas em HTML com botao de impressao.
+   Busca local no catalogo e nos clientes.
+
+7) CASO QUEIRA OS TESTES DO PROFESSOR:
+   sql/03_TESTES_DONA.sql tem exemplos de cadastro, estoque, venda, nota e relatorios.
+   Execute uma unica vez os blocos que INSEREM dados (SKU e CPF sao unicos).
+   Nao execute testes de insercao em banco de producao se nao quiser dados ficticios.
+
+PROBLEMAS COMUNS:
+ - Access denied for user 'root' -> conferir senha em config/application-local.properties.
+ - Unknown database BD_JOALHERIA -> rodar SQL 01 (zero) ou 02 (banco existente).
+ - PROCEDURE does not exist -> a instalacao do script no Workbench nao terminou.
+ - Port 8080 already in use -> feche outro app ou edite server.port.
+ - Java SDK 21 is missing -> configure o JDK 21 no IntelliJ.
+ - MAVEN em vermelho -> clique em Reload All Maven Projects e confira sua rede.
+
+NOTAS:
+ * Documento de venda e apenas ACADEMICO, nao emite NF-e/NFC-e valida.
+ * As passwords de usuario seguem SHA2 para compatibilidade com seu script original;
+   sistema feito para projeto academico local, nao para publicar na internet.
+ * O usuario root do MySQL tem privilegios amplos; para uso real, crie usuario
+   especifico com permissoes restritas e use HTTPS e hash de senha moderno.
+ * O banco nao e recriado automaticamente pelo app (spring.sql.init.mode=never).
+ * Banco de dados, Maven e Java precisam estar instalados/rodando no seu PC.

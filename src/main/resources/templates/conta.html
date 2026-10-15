@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Minha conta')}"></head>
+
+<body>
+<div class="app">
+
+    <aside th:replace="~{fragments/layout :: menu('conta')}"></aside>
+
+    <main class="content">
+
+        <header th:replace="~{fragments/layout :: topo('Minha conta','Altere a senha para proteger a administração da joalheria.')}"></header>
+
+        <div th:replace="~{fragments/layout :: alertas}"></div>
+
+        <section class="panel form-panel">
+
+            <h2>Segurança da conta</h2>
+
+            <p class="subtitle"
+               th:text="${'Usuária: ' + login}"></p>
+
+            <form th:action="@{/conta/senha}"
+                  method="post"
+                  class="stack-form">
+
+                <label>
+                    Senha atual
+                    <input type="password"
+                           name="senhaAtual"
+                           required
+                           autocomplete="current-password">
+                </label>
+
+                <label>
+                    Nova senha
+                    <input type="password"
+                           name="senhaNova"
+                           id="senhaNova"
+                           minlength="8"
+                           required
+                           autocomplete="new-password"
+                           aria-describedby="resumoSenha">
+                </label>
+
+                <label>
+                    Confirme a nova senha
+                    <input type="password"
+                           name="confirmacao"
+                           id="confirmacao"
+                           minlength="8"
+                           required
+                           autocomplete="new-password">
+                </label>
+
+                <!-- REGRAS DINÂMICAS -->
+                <div style="
+                    background: #f8f9fa;
+                    border: 1px solid #e2e5e9;
+                    border-radius: 10px;
+                    padding: 16px 20px;
+                    margin: 8px 0 16px;
+                ">
+
+                    <strong style="display:block; margin-bottom:12px;">
+                        Requisitos para sua nova senha:
+                    </strong>
+
+                    <ul style="
+                        list-style:none;
+                        padding:0;
+                        margin:0;
+                        line-height:2;
+                    ">
+
+                        <li>
+                            <span id="statusTamanho">○</span>
+                            Mínimo de 8 caracteres
+                        </li>
+
+                        <li>
+                            <span id="statusMaiuscula">○</span>
+                            Pelo menos uma letra maiúscula (A-Z)
+                        </li>
+
+                        <li>
+                            <span id="statusEspecial">○</span>
+                            Pelo menos um caractere especial
+                            (@, #, $, %, !, &amp;, etc.)
+                        </li>
+
+                    </ul>
+
+                    <p id="resumoSenha"
+                       aria-live="polite"
+                       style="
+                           margin-top:12px;
+                           margin-bottom:0;
+                           font-size:13px;
+                           font-weight:600;
+                       ">
+                        Digite sua nova senha para verificar as regras.
+                    </p>
+
+                    <p id="statusConfirmacao"
+                       aria-live="polite"
+                       style="font-size:13px; margin-bottom:0;">
+                    </p>
+
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-primary"
+                            type="submit">
+                        Atualizar senha →
+                    </button>
+                </div>
+
+            </form>
+
+            <p class="hint">
+                A senha do login da joalheria é diferente
+                da senha do MySQL Workbench.
+            </p>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const senhaInput = document.getElementById("senhaNova");
+        const confirmacaoInput = document.getElementById("confirmacao");
+
+        const statusTamanho = document.getElementById("statusTamanho");
+        const statusMaiuscula = document.getElementById("statusMaiuscula");
+        const statusEspecial = document.getElementById("statusEspecial");
+
+        const resumo = document.getElementById("resumoSenha");
+        const statusConfirmacao = document.getElementById("statusConfirmacao");
+
+        function atualizarIndicador(elemento, valido, vazio) {
+            if (vazio) {
+                elemento.textContent = "○";
+                elemento.style.color = "#6b7280";
+            } else if (valido) {
+                elemento.textContent = "✓";
+                elemento.style.color = "#16803c";
+            } else {
+                elemento.textContent = "✗";
+                elemento.style.color = "#dc2626";
+            }
+        }
+
+        function verificarSenha() {
+
+            const senha = senhaInput.value;
+            const confirmacao = confirmacaoInput.value;
+
+            const tamanho = senha.length >= 8;
+            const maiuscula = /[A-Z]/.test(senha);
+            const especial = /[^\p{L}\p{N}\s]/u.test(senha);
+
+            const vazio = senha.length === 0;
+
+            atualizarIndicador(statusTamanho, tamanho, vazio);
+            atualizarIndicador(statusMaiuscula, maiuscula, vazio);
+            atualizarIndicador(statusEspecial, especial, vazio);
+
+            if (vazio) {
+                resumo.textContent =
+                    "Digite sua nova senha para verificar as regras.";
+                resumo.style.color = "#6b7280";
+            } else {
+
+                const faltas = [];
+
+                if (!tamanho) {
+                    const restante = 8 - senha.length;
+                    faltas.push(
+                        "mais " + restante +
+                        (restante === 1 ? " caractere" : " caracteres")
+                    );
+                }
+
+                if (!maiuscula) {
+                    faltas.push("uma letra maiúscula");
+                }
+
+                if (!especial) {
+                    faltas.push("um caractere especial");
+                }
+
+                if (faltas.length === 0) {
+                    resumo.textContent =
+                        "✓ Sua senha atende a todos os requisitos!";
+                    resumo.style.color = "#16803c";
+                } else {
+                    resumo.textContent =
+                        "Ainda falta: " + faltas.join(", ") + ".";
+                    resumo.style.color = "#b91c1c";
+                }
+            }
+
+            if (confirmacao.length === 0) {
+                statusConfirmacao.textContent = "";
+            } else if (senha === confirmacao) {
+                statusConfirmacao.textContent =
+                    "✓ A confirmação corresponde à nova senha.";
+                statusConfirmacao.style.color = "#16803c";
+            } else {
+                statusConfirmacao.textContent =
+                    "✗ As senhas não coincidem.";
+                statusConfirmacao.style.color = "#b91c1c";
+            }
+        }
+
+        senhaInput.addEventListener("input", verificarSenha);
+        confirmacaoInput.addEventListener("input", verificarSenha);
+
+        verificarSenha();
+
+    });
+</script>
+
+</body>
+</html>

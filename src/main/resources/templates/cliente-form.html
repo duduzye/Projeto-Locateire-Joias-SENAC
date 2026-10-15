@@ -1,0 +1,13 @@
+<!DOCTYPE html><html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Cadastro de cliente')}"></head><body>
+<div class="app"><aside th:replace="~{fragments/layout :: menu('clientes')}"></aside><main class="content">
+ <header th:replace="~{fragments/layout :: topo('Cadastro de cliente','Registre os dados de quem compra suas joias.')}"></header>
+ <div th:replace="~{fragments/layout :: alertas}"></div>
+ <section class="panel form-panel"><form th:action="@{/clientes/salvar}" th:object="${clienteForm}" method="post"><input type="hidden" name="id" th:if="${editando != null}" th:value="${editando}">
+ <h2 th:text="${editando == null ? 'Novo cliente' : 'Editar cliente'}"></h2><div class="form-grid">
+ <label class="full">Nome completo *<input th:field="*{nome}" required maxlength="100" placeholder="Nome e sobrenome"><small class="field-error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></small></label>
+ <label>CPF (somente números)<input th:field="*{cpf}" maxlength="11" inputmode="numeric" placeholder="11 dígitos"><small class="field-error" th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}"></small></label>
+ <label>Telefone (somente números)<input th:field="*{telefone}" maxlength="11" inputmode="numeric" placeholder="DDD + número"><small class="field-error" th:if="${#fields.hasErrors('telefone')}" th:errors="*{telefone}"></small></label>
+ <label class="full">E-mail<input th:field="*{email}" type="email" maxlength="100" placeholder="cliente@exemplo.com"><small class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small></label>
+ <label th:if="${editando != null}" class="checkbox-label"><input type="checkbox" th:field="*{ativo}"> Cliente ativo</label>
+ </div><div class="form-actions"><a class="btn btn-outline" th:href="@{/clientes}">Cancelar</a><button class="btn btn-primary" type="submit">Salvar cliente →</button></div></form></section>
+</main></div></body></html>

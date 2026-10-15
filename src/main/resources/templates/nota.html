@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Nota acadêmica')}"></head>
+
+<body>
+<div class="app">
+
+    <aside th:replace="~{fragments/layout :: menu('vendas')}"></aside>
+
+    <main class="content">
+
+        <!-- CABEÇALHO -->
+        <div class="no-print">
+
+            <header th:replace="~{fragments/layout :: topo('Nota da venda','Comprovante acadêmico dos produtos vendidos.')}"></header>
+
+            <div th:replace="~{fragments/layout :: alertas}"></div>
+
+            <div class="toolbar">
+
+                <a class="btn btn-outline"
+                   th:href="@{/vendas}">
+                    ← Voltar às vendas
+                </a>
+
+                <button class="btn btn-primary"
+                        type="button"
+                        onclick="window.print()">
+                    Imprimir nota
+                </button>
+
+            </div>
+        </div>
+
+        <!-- NOTA -->
+        <article class="invoice">
+
+            <div class="invoice-top">
+
+                <div>
+                    <div class="eyebrow">
+                        COMPROVANTE ACADÊMICO
+                    </div>
+
+                    <h2>✦ Atelier Joalheria</h2>
+
+                    <p>Registro interno de venda</p>
+                </div>
+
+                <div class="align-right">
+
+                    <strong th:text="${nota.A10_numero}"></strong>
+
+                    <p th:text="${nota.A10_data_emissao != null ? #temporals.format(nota.A10_data_emissao, 'dd/MM/yyyy HH:mm') : '-'}"></p>
+
+                </div>
+            </div>
+
+            <!-- INFORMAÇÕES DA VENDA -->
+            <div class="invoice-details">
+
+                <!-- CLIENTE -->
+                <div>
+
+                    <div class="eyebrow">CLIENTE</div>
+
+                    <strong th:text="${nota.cliente_nome}"></strong>
+
+                    <p th:text="${nota.cliente_cpf ?: 'CPF não informado'}"></p>
+
+                    <p th:text="${nota.cliente_email ?: ''}"></p>
+
+                </div>
+
+                <!-- VENDA -->
+                <div>
+
+                    <div class="eyebrow">VENDA</div>
+
+                    <strong th:text="${'#' + nota.venda_codigo}"></strong>
+
+                    <p th:text="${nota.venda_data != null ? #temporals.format(nota.venda_data, 'dd/MM/yyyy HH:mm') : '-'}"></p>
+
+                    <p th:text="${'Atendida por: ' + nota.usuario_responsavel}"></p>
+
+                </div>
+            </div>
+
+            <!-- PRODUTOS VENDIDOS -->
+            <div class="table-scroll">
+
+                <table>
+
+                    <thead>
+                    <tr>
+                        <th>SKU / Produto</th>
+                        <th>Quantidade</th>
+                        <th class="align-right">Unitário</th>
+                        <th class="align-right">Subtotal</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="i : ${itens}">
+
+                        <td>
+                            <strong th:text="${i.produto_nome}"></strong>
+                            <small th:text="${i.A05_sku}"></small>
+                        </td>
+
+                        <td th:text="${i.A08_quantidade}"></td>
+
+                        <td class="align-right"
+                            th:text="${'R$ ' + #numbers.formatDecimal(i.A08_valor_unitario, 1, 'POINT', 2, 'COMMA')}">
+                        </td>
+
+                        <td class="align-right"
+                            th:text="${'R$ ' + #numbers.formatDecimal(i.A08_valor_item, 1, 'POINT', 2, 'COMMA')}">
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <!-- TOTAL -->
+            <div class="invoice-total">
+
+                <span>TOTAL DA VENDA</span>
+
+                <strong th:text="${'R$ ' + #numbers.formatDecimal(nota.A10_valor_total, 1, 'POINT', 2, 'COMMA')}">
+                </strong>
+
+            </div>
+
+            <!-- AVISO -->
+            <p class="invoice-disclaimer">
+                DOCUMENTO ACADÊMICO – NÃO É NOTA FISCAL ELETRÔNICA
+                (NF-e/NFC-e). Sem validade fiscal.
+            </p>
+
+        </article>
+
+    </main>
+
+</div>
+</body>
+</html>

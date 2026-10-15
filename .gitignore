@@ -1,0 +1,11 @@
+# IntelliJ
+.idea/
+*.iml
+
+# Maven
+target/
+
+# Senhas e configuracoes locais
+config/application-local.properties
+.env
+.env.*

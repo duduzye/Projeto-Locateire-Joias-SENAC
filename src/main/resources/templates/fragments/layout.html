@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(titulo)">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title th:text="${titulo} + ' | Atelier Joalheria'">Atelier Joalheria</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<aside class="sidebar" th:fragment="menu(ativo)">
+    <a class="brand" th:href="@{/dashboard}"><span class="brand-mark">✦</span><span>ATELIER <small>JOALHERIA</small></span></a>
+    <div class="sidebar-label">ADMINISTRAÇÃO</div>
+    <nav class="side-menu" aria-label="Menu principal">
+      <a th:classappend="${ativo=='dashboard'}?'selected'" th:href="@{/dashboard}"><span>◫</span> Visão geral</a>
+      <a th:classappend="${ativo=='produtos'}?'selected'" th:href="@{/produtos}"><span>◇</span> Produtos</a>
+      <a th:classappend="${ativo=='clientes'}?'selected'" th:href="@{/clientes}"><span>♧</span> Clientes</a>
+      <a th:classappend="${ativo=='estoque'}?'selected'" th:href="@{/estoque}"><span>▣</span> Estoque</a>
+      <a th:classappend="${ativo=='vendas'}?'selected'" th:href="@{/vendas}"><span>▤</span> Vendas</a>
+    </nav>
+    <div class="sidebar-bottom">
+       <a class="small-link" th:href="@{/conta}">⚙ Conta da proprietária</a>
+       <form th:action="@{/sair}" method="post"><button class="logout" type="submit">Sair do sistema →</button></form>
+    </div>
+</aside>
+<header th:fragment="topo(titulo,subtitulo)" class="page-top">
+   <div><div class="eyebrow">PAINEL DA PROPRIETÁRIA</div><h1 th:text="${titulo}">Página</h1><p class="subtitle" th:text="${subtitulo}">Descrição</p></div>
+   <span class="owner-pill">✦ Acesso da dona</span>
+</header>
+<div th:fragment="alertas" class="alerts">
+    <div class="alert success" th:if="${sucesso}" th:text="${sucesso}">Sucesso</div>
+    <div class="alert error" th:if="${erro}" th:text="${erro}">Erro</div>
+</div>
+</body></html>

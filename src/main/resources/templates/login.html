@@ -1,0 +1,14 @@
+<!DOCTYPE html><html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar | Atelier Joalheria</title><link rel="stylesheet" th:href="@{/css/style.css}"></head>
+<body class="login-screen"><div class="login-deco"></div><main class="login-card">
+ <div class="login-emblem">✦</div><div class="eyebrow">ACESSO PRIVATIVO</div>
+ <h1>Atelier <em>Joalheria</em></h1><p class="subtitle">Seu ateliê, seus produtos, seu controle.</p>
+ <div class="alert error" th:if="${param.erro}">Usuária ou senha incorreta.</div>
+ <div class="alert success" th:if="${param.saiu}">Você saiu com segurança.</div>
+ <form th:action="@{/login}" method="post" class="stack-form">
+   <label>Login<input type="text" name="username" autocomplete="username" placeholder="Seu login" required autofocus></label>
+   <label>Senha<input type="password" name="password" autocomplete="current-password" placeholder="Sua senha" required></label>
+   <button class="btn btn-primary wide" type="submit">Entrar no sistema →</button>
+ </form><p class="login-foot">Sistema administrativo · Uso exclusivo da proprietária</p>
+</main></body></html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html><html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Dashboard')}"></head><body>
+<div class="app"><aside th:replace="~{fragments/layout :: menu('dashboard')}"></aside><main class="content">
+ <header th:replace="~{fragments/layout :: topo('Visão geral','Um resumo do desempenho da sua joalheria.')}"></header>
+ <div th:replace="~{fragments/layout :: alertas}"></div>
+ <section class="toolbar filter-wrap"><form th:action="@{/dashboard}" method="get" class="filter-form"><label>De <input type="date" name="inicio" th:value="${inicio}" required></label><label>Até <input type="date" name="fim" th:value="${fim}" required></label><button class="btn btn-outline" type="submit">Aplicar período</button></form><a class="btn btn-primary" th:href="@{/vendas/nova}">+ Nova venda</a></section>
+ <div class="stats">
+   <article class="stat-card"><span>FATURAMENTO NO PERÍODO</span><strong th:text="${'R$ ' + #numbers.formatDecimal(indicadores.total_vendido, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</strong><small>Total vendido</small></article>
+   <article class="stat-card"><span>VENDAS REALIZADAS</span><strong th:text="${indicadores.quantidade_vendas}">0</strong><small>Pedidos finalizados</small></article>
+   <article class="stat-card"><span>TICKET MÉDIO</span><strong th:text="${'R$ ' + #numbers.formatDecimal(indicadores.ticket_medio,1,'POINT',2,'COMMA')}">R$ 0,00</strong><small>Valor por venda</small></article>
+   <article class="stat-card"><span>ITENS VENDIDOS</span><strong th:text="${indicadores.quantidade_itens_vendidos}">0</strong><small>Unidades vendidas</small></article>
+ </div>
+ <section class="panel"><div class="panel-head"><div><div class="eyebrow">ACOMPANHAMENTO</div><h2>Vendas do período</h2></div><a class="link-arrow" th:href="@{/vendas}">Ver todas →</a></div>
+ <div class="table-scroll"><table><thead><tr><th>Venda</th><th>Data</th><th>Cliente</th><th>Responsável</th><th class="align-right">Total</th></tr></thead><tbody>
+ <tr th:each="v:${vendas}"><td th:text="${'#' + v.venda_codigo}"></td><td th:text="${v.data_venda != null ? #temporals.format(v.data_venda, 'dd/MM/yyyy HH:mm') : '-'}"></td><td th:text="${v.cliente}"></td><td th:text="${v.responsavel}"></td><td class="align-right value" th:text="${'R$ ' + #numbers.formatDecimal(v.valor_total,1,'POINT',2,'COMMA')}"></td></tr>
+ <tr th:if="${#lists.isEmpty(vendas)}"><td colspan="5" class="empty">Nenhuma venda nesse período. Cadastre sua primeira venda para começar.</td></tr></tbody></table></div></section>
+</main></div></body></html>
