@@ -1,19 +1,76 @@
-<!DOCTYPE html><html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Cadastro de produto')}"></head><body>
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Cadastro de produto')}"></head><body>
 <div class="app"><aside th:replace="~{fragments/layout :: menu('produtos')}"></aside><main class="content">
- <header th:replace="~{fragments/layout :: topo('Cadastro de produto','Preencha os detalhes da peça e salve no catálogo.')}"></header>
- <div th:replace="~{fragments/layout :: alertas}"></div>
- <section class="panel form-panel"><form th:action="@{/produtos/salvar}" th:object="${produtoForm}" method="post"><input type="hidden" name="id" th:if="${editando != null}" th:value="${editando}">
- <h2 th:text="${editando == null ? 'Nova joia' : 'Editar joia'}"></h2><div class="form-grid">
-   <label>SKU *<input type="text" th:field="*{sku}" maxlength="30" required placeholder="EX: ANL-001"><small class="field-error" th:if="${#fields.hasErrors('sku')}" th:errors="*{sku}"></small></label>
-   <label>Nome *<input type="text" th:field="*{nome}" maxlength="100" required placeholder="Ex: Anel Aurora"><small class="field-error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></small></label>
-   <label class="full">Descrição<textarea th:field="*{descricao}" maxlength="255" rows="3" placeholder="Descrição da peça"></textarea></label>
-   <label>Preço (R$) *<input type="number" th:field="*{preco}" min="0.01" step="0.01" required><small class="field-error" th:if="${#fields.hasErrors('preco')}" th:errors="*{preco}"></small></label>
-   <label>Tamanho<input type="text" th:field="*{tamanho}" maxlength="20" placeholder="Ex: 16"></label>
-   <label>Categoria *<select th:field="*{categoria}" required><option value="">Selecione...</option><option th:each="c:${categorias}" th:value="${c.codigo}" th:text="${c.nome}"></option></select></label>
-   <label>Material *<select th:field="*{material}" required><option value="">Selecione...</option><option th:each="c:${materiais}" th:value="${c.codigo}" th:text="${c.nome}"></option></select></label>
-   <label>Pedra<select th:field="*{pedra}"><option value="">Sem vínculo</option><option th:each="c:${pedras}" th:value="${c.codigo}" th:text="${c.nome}"></option></select></label>
-   <label>Peso em gramas<input type="number" th:field="*{peso}" min="0.01" step="0.01" placeholder="Opcional"></label>
-   <label th:if="${editando != null}" class="checkbox-label"><input type="checkbox" th:field="*{ativo}"> Produto ativo</label>
- </div><div class="form-actions"><a class="btn btn-outline" th:href="@{/produtos}">Cancelar</a><button class="btn btn-primary" type="submit">Salvar produto →</button></div>
- <p class="hint">O estoque é controlado separadamente pela tela Estoque. Novos produtos começam com saldo zero.</p></form></section>
+    <header th:replace="~{fragments/layout :: topo('Cadastro de produto','Preencha os detalhes da peça e salve no catálogo.')}"></header>
+    <div th:replace="~{fragments/layout :: alertas}"></div>
+
+    <section class="panel form-panel">
+        <form th:action="@{/produtos/salvar}" th:object="${produtoForm}" method="post">
+            <input type="hidden" name="id" th:if="${editando != null}" th:value="${editando}">
+
+            <h2 th:text="${editando == null ? 'Nova joia' : 'Editar joia'}"></h2>
+
+            <div class="form-grid">
+                <label>SKU *
+                    <input type="text" th:field="*{sku}" maxlength="30" required placeholder="EX: ANL-001">
+                    <small class="field-error" th:if="${#fields.hasErrors('sku')}" th:errors="*{sku}"></small>
+                </label>
+
+                <label>Nome *
+                    <input type="text" th:field="*{nome}" maxlength="100" required placeholder="Ex: Anel Aurora">
+                    <small class="field-error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></small>
+                </label>
+
+                <label class="full">Descrição
+                    <textarea th:field="*{descricao}" maxlength="255" rows="3" placeholder="Descrição da peça"></textarea>
+                </label>
+
+                <label>Preço (R$) *
+                    <input type="number" th:field="*{preco}" min="0.01" step="0.01" required>
+                    <small class="field-error" th:if="${#fields.hasErrors('preco')}" th:errors="*{preco}"></small>
+                </label>
+
+                <label>Tamanho
+                    <input type="text" th:field="*{tamanho}" maxlength="20" placeholder="Ex: 16">
+                </label>
+
+                <label>Categoria *
+                    <select th:field="*{categoria}" required>
+                        <option value="">Selecione...</option>
+                        <option th:each="c:${categorias}" th:value="${c.codigo}" th:text="${c.nome}"></option>
+                    </select>
+                </label>
+
+                <label>Material *
+                    <select th:field="*{material}" required>
+                        <option value="">Selecione...</option>
+                        <option th:each="c:${materiais}" th:value="${c.codigo}" th:text="${c.nome}"></option>
+                    </select>
+                </label>
+
+                <label>Pedra
+                    <select th:field="*{pedra}">
+                        <option value="">Sem vínculo</option>
+                        <option th:each="c:${pedras}" th:value="${c.codigo}" th:text="${c.nome}"></option>
+                    </select>
+                </label>
+
+                <label>Peso em gramas
+                    <input type="number" th:field="*{peso}" min="0.01" step="0.01" placeholder="Opcional">
+                </label>
+
+                <label th:if="${editando != null}" class="checkbox-label">
+                    <input type="checkbox" th:field="*{ativo}"> Produto ativo
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <a class="btn btn-outline" th:href="@{/produtos}">Cancelar</a>
+                <button class="btn btn-primary" type="submit">Salvar produto →</button>
+            </div>
+
+            <p class="hint">O estoque é controlado separadamente pela tela Estoque. Novos produtos começam com saldo zero.</p>
+        </form>
+    </section>
 </main></div></body></html>

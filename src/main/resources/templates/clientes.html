@@ -1,10 +1,62 @@
-<!DOCTYPE html><html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Clientes')}"></head><body>
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Clientes')}"></head><body>
 <div class="app"><aside th:replace="~{fragments/layout :: menu('clientes')}"></aside><main class="content">
  <header th:replace="~{fragments/layout :: topo('Clientes','Organize os contatos e cadastros da loja.')}"></header>
  <div th:replace="~{fragments/layout :: alertas}"></div>
- <section class="panel"><div class="panel-head"><div><div class="eyebrow">RELACIONAMENTO</div><h2>Clientes cadastrados</h2></div><a class="btn btn-primary" th:href="@{/clientes/novo}">+ Cadastrar cliente</a></div>
- <div class="toolbar"><input class="search" type="search" id="filtroTabela" placeholder="Pesquisar por nome ou CPF..." aria-label="Pesquisar clientes"></div>
- <div class="table-scroll"><table id="tabelaFiltravel"><thead><tr><th>Nome</th><th>CPF</th><th>Telefone</th><th>E-mail</th><th>Status</th><th>Ações</th></tr></thead><tbody>
- <tr th:each="c:${clientes}"><td><strong th:text="${c.A06_nome}"></strong></td><td th:text="${c.A06_cpf ?: '—'}"></td><td th:text="${c.A06_telefone ?: '—'}"></td><td th:text="${c.A06_email ?: '—'}"></td><td><span class="tag" th:classappend="${c.A06_ativo} ? 'active' : 'inactive'" th:text="${c.A06_ativo} ? 'Ativo' : 'Inativo'"></span></td><td><div class="actions"><a class="small-link" th:href="@{/clientes/{id}/editar(id=${c.A06_codigo})}">Editar</a><form th:if="${c.A06_ativo}" th:action="@{/clientes/{id}/desativar(id=${c.A06_codigo})}" method="post" onsubmit="return confirm('Desativar este cliente?')"><button type="submit" class="link-danger">Desativar</button></form></div></td></tr>
- <tr th:if="${#lists.isEmpty(clientes)}"><td colspan="6" class="empty">Nenhum cliente cadastrado.</td></tr></tbody></table></div></section>
+ <section class="panel">
+  <div class="panel-head">
+   <div>
+    <div class="eyebrow">RELACIONAMENTO</div>
+    <h2>Clientes cadastrados</h2>
+   </div>
+   <a class="btn btn-primary" th:href="@{/clientes/novo}">+ Cadastrar cliente</a>
+  </div>
+
+  <div class="toolbar">
+   <input class="search" type="search" id="filtroTabela" placeholder="Pesquisar por nome ou CPF..." aria-label="Pesquisar clientes">
+  </div>
+
+  <div class="table-scroll">
+   <table id="tabelaFiltravel">
+    <thead>
+    <tr>
+     <th>Nome</th>
+     <th>CPF</th>
+     <th>Telefone</th>
+     <th>E-mail</th>
+     <th>Status</th>
+     <th>Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="c:${clientes}">
+     <td><strong th:text="${c.A06_nome}"></strong></td>
+     <td th:text="${c.A06_cpf ?: '—'}"></td>
+     <td th:text="${c.A06_telefone ?: '—'}"></td>
+     <td th:text="${c.A06_email ?: '—'}"></td>
+     <td>
+     <span class="tag"
+           th:classappend="${c.A06_ativo} ? 'active' : 'inactive'"
+           th:text="${c.A06_ativo} ? 'Ativo' : 'Inativo'"></span>
+     </td>
+     <td>
+      <div class="actions">
+       <a class="small-link" th:href="@{/clientes/{id}/editar(id=${c.A06_codigo})}">Editar</a>
+       <form th:if="${c.A06_ativo}"
+             th:action="@{/clientes/{id}/desativar(id=${c.A06_codigo})}"
+             method="post"
+             onsubmit="return confirm('Desativar este cliente?')">
+        <button type="submit" class="link-danger">Desativar</button>
+       </form>
+      </div>
+     </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(clientes)}">
+     <td colspan="6" class="empty">Nenhum cliente cadastrado.</td>
+    </tr>
+    </tbody>
+   </table>
+  </div>
+ </section>
 </main></div><script th:src="@{/js/tabelas.js}"></script></body></html>

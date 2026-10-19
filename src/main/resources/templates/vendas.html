@@ -1,9 +1,49 @@
-<!DOCTYPE html><html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Vendas')}"></head><body>
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Vendas')}"></head><body>
 <div class="app"><aside th:replace="~{fragments/layout :: menu('vendas')}"></aside><main class="content">
  <header th:replace="~{fragments/layout :: topo('Vendas','Confira os pedidos realizados e suas notas acadêmicas.')}"></header>
  <div th:replace="~{fragments/layout :: alertas}"></div>
- <section class="panel"><div class="panel-head"><div><div class="eyebrow">PEDIDOS DA LOJA</div><h2>Histórico de vendas</h2></div><a class="btn btn-primary" th:href="@{/vendas/nova}">+ Registrar venda</a></div>
- <div class="table-scroll"><table><thead><tr><th>Venda</th><th>Data e hora</th><th>Cliente</th><th>Responsável</th><th class="align-right">Total</th><th>Nota</th></tr></thead><tbody>
- <tr th:each="v:${vendas}"><td class="mono" th:text="${'#' + v.A07_codigo}"></td><td th:text="${#temporals.format(v.A07_data,'dd/MM/yyyy HH:mm')}"></td><td th:text="${v.cliente_nome}"></td><td th:text="${v.usuario_responsavel}"></td><td class="align-right value" th:text="${'R$ ' + #numbers.formatDecimal(v.A07_valor_total,1,'POINT',2,'COMMA')}"></td><td><a class="small-link" th:href="@{/notas/{id}(id=${v.A07_codigo})}">Ver nota →</a></td></tr>
- <tr th:if="${#lists.isEmpty(vendas)}"><td class="empty" colspan="6">Nenhuma venda registrada.</td></tr></tbody></table></div></section>
+
+ <section class="panel">
+  <div class="panel-head">
+   <div>
+    <div class="eyebrow">PEDIDOS DA LOJA</div>
+    <h2>Histórico de vendas</h2>
+   </div>
+   <a class="btn btn-primary" th:href="@{/vendas/nova}">+ Registrar venda</a>
+  </div>
+
+  <div class="table-scroll">
+   <table>
+    <thead>
+    <tr>
+     <th>Venda</th>
+     <th>Data e hora</th>
+     <th>Cliente</th>
+     <th>Responsável</th>
+     <th class="align-right">Total</th>
+     <th>Nota</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="v:${vendas}">
+     <td class="mono" th:text="${'#' + v.A07_codigo}"></td>
+     <td th:text="${#temporals.format(v.A07_data,'dd/MM/yyyy HH:mm')}"></td>
+     <td th:text="${v.cliente_nome}"></td>
+     <td th:text="${v.usuario_responsavel}"></td>
+     <td class="align-right value"
+         th:text="${'R$ ' + #numbers.formatDecimal(v.A07_valor_total,1,'POINT',2,'COMMA')}"></td>
+     <td>
+      <a class="small-link" th:href="@{/notas/{id}(id=${v.A07_codigo})}">Ver nota →</a>
+     </td>
+    </tr>
+
+    <tr th:if="${#lists.isEmpty(vendas)}">
+     <td class="empty" colspan="6">Nenhuma venda registrada.</td>
+    </tr>
+    </tbody>
+   </table>
+  </div>
+ </section>
 </main></div></body></html>

@@ -1,16 +1,87 @@
-<!DOCTYPE html><html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Estoque')}"></head><body>
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Estoque')}"></head><body>
 <div class="app"><aside th:replace="~{fragments/layout :: menu('estoque')}"></aside><main class="content">
  <header th:replace="~{fragments/layout :: topo('Controle de estoque','Registre entradas, saídas e acompanhe cada movimentação.')}"></header>
  <div th:replace="~{fragments/layout :: alertas}"></div>
- <section class="panel form-panel"><div class="panel-head"><div><div class="eyebrow">MOVIMENTAÇÃO</div><h2>Nova movimentação</h2></div></div>
+
+ <section class="panel form-panel">
+  <div class="panel-head">
+   <div>
+    <div class="eyebrow">MOVIMENTAÇÃO</div>
+    <h2>Nova movimentação</h2>
+   </div>
+  </div>
+
   <form method="post" th:action="@{/estoque/movimentar}" class="form-grid">
-   <label>Produto *<select name="produto" required><option value="">Selecione...</option><option th:each="p:${produtos}" th:value="${p.codigo}" th:text="${p.nome + ' · ' + p.estoque + ' em estoque'}"></option></select></label>
-   <label>Tipo *<select name="tipo" required><option value="ENTRADA">Entrada (+)</option><option value="SAIDA">Saída (−)</option></select></label>
-   <label>Quantidade *<input type="number" name="quantidade" min="1" step="1" required value="1"></label>
-   <label>Observação<input name="observacao" maxlength="255" placeholder="Ex: reposição de fornecedor"></label>
-   <div class="full form-actions"><button class="btn btn-primary" type="submit">Registrar movimentação →</button></div>
-  </form></section>
- <section class="panel"><div class="panel-head"><div><div class="eyebrow">AUDITORIA</div><h2>Últimas 100 movimentações</h2></div></div><div class="table-scroll"><table><thead><tr><th>Data</th><th>Produto</th><th>Tipo</th><th>Quantidade</th><th>Observação</th><th>Responsável</th></tr></thead><tbody>
- <tr th:each="m:${movimentos}"><td th:text="${#temporals.format(m.data,'dd/MM/yyyy HH:mm')}"></td><td th:text="${m.produto}"></td><td><span class="tag" th:classappend="${m.tipo == 'ENTRADA'} ? 'active' : 'inactive'" th:text="${m.tipo}"></span></td><td th:text="${m.quantidade}"></td><td th:text="${m.observacao ?: '—'}"></td><td th:text="${m.responsavel}"></td></tr>
- <tr th:if="${#lists.isEmpty(movimentos)}"><td colspan="6" class="empty">Sem movimentações até o momento.</td></tr></tbody></table></div></section>
+   <label>Produto *
+    <select name="produto" required>
+     <option value="">Selecione...</option>
+     <option th:each="p:${produtos}"
+             th:value="${p.codigo}"
+             th:text="${p.nome + ' · ' + p.estoque + ' em estoque'}"></option>
+    </select>
+   </label>
+
+   <label>Tipo *
+    <select name="tipo" required>
+     <option value="ENTRADA">Entrada (+)</option>
+     <option value="SAIDA">Saída (−)</option>
+    </select>
+   </label>
+
+   <label>Quantidade *
+    <input type="number" name="quantidade" min="1" step="1" required value="1">
+   </label>
+
+   <label>Observação
+    <input name="observacao" maxlength="255" placeholder="Ex: reposição de fornecedor">
+   </label>
+
+   <div class="full form-actions">
+    <button class="btn btn-primary" type="submit">Registrar movimentação →</button>
+   </div>
+  </form>
+ </section>
+
+ <section class="panel">
+  <div class="panel-head">
+   <div>
+    <div class="eyebrow">AUDITORIA</div>
+    <h2>Últimas 100 movimentações</h2>
+   </div>
+  </div>
+
+  <div class="table-scroll">
+   <table>
+    <thead>
+    <tr>
+     <th>Data</th>
+     <th>Produto</th>
+     <th>Tipo</th>
+     <th>Quantidade</th>
+     <th>Observação</th>
+     <th>Responsável</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="m:${movimentos}">
+     <td th:text="${#temporals.format(m.data,'dd/MM/yyyy HH:mm')}"></td>
+     <td th:text="${m.produto}"></td>
+     <td>
+     <span class="tag"
+           th:classappend="${m.tipo == 'ENTRADA'} ? 'active' : 'inactive'"
+           th:text="${m.tipo}"></span>
+     </td>
+     <td th:text="${m.quantidade}"></td>
+     <td th:text="${m.observacao ?: '—'}"></td>
+     <td th:text="${m.responsavel}"></td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(movimentos)}">
+     <td colspan="6" class="empty">Sem movimentações até o momento.</td>
+    </tr>
+    </tbody>
+   </table>
+  </div>
+ </section>
 </main></div></body></html>
