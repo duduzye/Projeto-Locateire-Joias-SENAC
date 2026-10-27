@@ -1,0 +1,10 @@
+<!DOCTYPE html><html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Fornecedores')}"></head><body>
+<div class="app"><aside th:replace="~{fragments/layout :: menu('fornecedores')}"></aside><main class="content">
+    <header th:replace="~{fragments/layout :: topo('Fornecedores','Organize os contatos de quem abastece a loja.')}"></header>
+    <div th:replace="~{fragments/layout :: alertas}"></div>
+    <section class="panel"><div class="panel-head"><div><div class="eyebrow">ABASTECIMENTO</div><h2>Fornecedores cadastrados</h2></div><a class="btn btn-primary" th:href="@{/fornecedores/novo}">+ Cadastrar fornecedor</a></div>
+        <div class="toolbar"><input class="search" type="search" id="filtroTabela" placeholder="Pesquisar por nome ou CNPJ..." aria-label="Pesquisar fornecedores"></div>
+        <div class="table-scroll"><table id="tabelaFiltravel"><thead><tr><th>Nome</th><th>CNPJ</th><th>Telefone</th><th>E-mail</th><th>Endereço</th><th>Status</th><th>Ações</th></tr></thead><tbody>
+        <tr th:each="f:${fornecedores}"><td><strong th:text="${f.A11_nome}"></strong></td><td th:text="${f.A11_cnpj}"></td><td th:text="${f.A11_telefone ?: '—'}"></td><td th:text="${f.A11_email ?: '—'}"></td><td th:text="${f.A11_endereco ?: '—'}"></td><td><span class="tag" th:classappend="${f.A11_ativo} ? 'active' : 'inactive'" th:text="${f.A11_ativo} ? 'Ativo' : 'Inativo'"></span></td><td><div class="actions"><a class="small-link" th:href="@{/fornecedores/{id}/editar(id=${f.A11_codigo})}">Editar</a><form th:if="${f.A11_ativo}" th:action="@{/fornecedores/{id}/desativar(id=${f.A11_codigo})}" method="post" onsubmit="return confirm('Desativar este fornecedor?')"><button type="submit" class="link-danger">Desativar</button></form></div></td></tr>
+        <tr th:if="${#lists.isEmpty(fornecedores)}"><td colspan="7" class="empty">Nenhum fornecedor cadastrado.</td></tr></tbody></table></div></section>
+</main></div><script th:src="@{/js/tabelas.js}"></script></body></html>

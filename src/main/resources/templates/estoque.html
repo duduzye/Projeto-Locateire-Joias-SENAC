@@ -8,9 +8,16 @@
    <label>Tipo *<select name="tipo" required><option value="ENTRADA">Entrada (+)</option><option value="SAIDA">Saída (−)</option></select></label>
    <label>Quantidade *<input type="number" name="quantidade" min="1" step="1" required value="1"></label>
    <label>Observação<input name="observacao" maxlength="255" placeholder="Ex: reposição de fornecedor"></label>
+   <label class="full" id="campoFornecedor">Fornecedor *<select name="fornecedor" required><option value="">Selecione...</option><option th:each="f:${fornecedores}" th:value="${f.codigo}" th:text="${f.nome}"></option></select></label>
    <div class="full form-actions"><button class="btn btn-primary" type="submit">Registrar movimentação →</button></div>
   </form></section>
- <section class="panel"><div class="panel-head"><div><div class="eyebrow">AUDITORIA</div><h2>Últimas 100 movimentações</h2></div></div><div class="table-scroll"><table><thead><tr><th>Data</th><th>Produto</th><th>Tipo</th><th>Quantidade</th><th>Observação</th><th>Responsável</th></tr></thead><tbody>
- <tr th:each="m:${movimentos}"><td th:text="${#temporals.format(m.data,'dd/MM/yyyy HH:mm')}"></td><td th:text="${m.produto}"></td><td><span class="tag" th:classappend="${m.tipo == 'ENTRADA'} ? 'active' : 'inactive'" th:text="${m.tipo}"></span></td><td th:text="${m.quantidade}"></td><td th:text="${m.observacao ?: '—'}"></td><td th:text="${m.responsavel}"></td></tr>
- <tr th:if="${#lists.isEmpty(movimentos)}"><td colspan="6" class="empty">Sem movimentações até o momento.</td></tr></tbody></table></div></section>
-</main></div></body></html>
+ <section class="panel"><div class="panel-head"><div><div class="eyebrow">AUDITORIA</div><h2>Últimas 100 movimentações</h2></div></div><div class="table-scroll"><table><thead><tr><th>Data</th><th>Produto</th><th>Tipo</th><th>Quantidade</th><th>Fornecedor</th><th>Observação</th><th>Responsável</th></tr></thead><tbody>
+ <tr th:each="m:${movimentos}"><td th:text="${#temporals.format(m.data,'dd/MM/yyyy HH:mm')}"></td><td th:text="${m.produto}"></td><td><span class="tag" th:classappend="${m.tipo == 'ENTRADA'} ? 'active' : 'inactive'" th:text="${m.tipo}"></span></td><td th:text="${m.quantidade}"></td><td th:text="${m.fornecedor ?: '—'}"></td><td th:text="${m.observacao ?: '—'}"></td><td th:text="${m.responsavel}"></td></tr>
+ <tr th:if="${#lists.isEmpty(movimentos)}"><td colspan="7" class="empty">Sem movimentações até o momento.</td></tr></tbody></table></div></section>
+</main></div>
+<script>
+ const tipo=document.querySelector('select[name=tipo]'),campo=document.getElementById('campoFornecedor'),sel=campo.querySelector('select');
+ function alternar(){const entrada=tipo.value==='ENTRADA';campo.style.display=entrada?'':'none';sel.disabled=!entrada;sel.required=entrada;}
+ tipo.addEventListener('change',alternar);alternar();
+</script>
+</body></html>
