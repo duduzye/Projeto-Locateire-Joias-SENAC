@@ -3,6 +3,7 @@ package br.com.joalheria.repository;
 
 import br.com.joalheria.model.ClienteForm;
 import br.com.joalheria.model.ProdutoForm;
+import br.com.joalheria.model.FornecedorForm;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,9 @@ public class JoalheriaRepository {
 
     public List<Map<String, Object>> vendas() {
         return jdbc.queryForList("CALL PROC_SEL_VENDAS()");
+    }
+
+    public List<Map<String, Object>> fornecedores() { return jdbc.queryForList("CALL PROC_SEL_FORNECEDOR()");
     }
 
     public List<Map<String, Object>> categorias() {
@@ -78,20 +82,31 @@ public class JoalheriaRepository {
             """);
     }
 
+    public List<Map<String, Object>> fornecedoresAtivos() {
+        return jdbc.queryForList("""
+        SELECT A11_codigo codigo, A11_nome nome
+        FROM FORNECEDOR_11
+        WHERE A11_ativo=TRUE
+        ORDER BY A11_nome
+        """);
+    }
+
     public List<Map<String, Object>> movimentacoes() {
         return jdbc.queryForList("""
-            SELECT M.A09_data data,
-                   M.A09_tipo tipo,
-                   M.A09_quantidade quantidade,
-                   M.A09_observacao observacao,
-                   P.A05_nome produto,
-                   U.A01_nome responsavel
-            FROM MOVIMENTACAO_ESTOQUE_09 M
-            JOIN PRODUTO_05 P ON P.A05_codigo=M.A05_codigo
-            JOIN USUARIO_01 U ON U.A01_codigo=M.A01_codigo
-            ORDER BY M.A09_data DESC, M.A09_codigo DESC
-            LIMIT 100
-            """);
+        SELECT M.A09_data data,
+               M.A09_tipo tipo,
+               M.A09_quantidade quantidade,
+               M.A09_observacao observacao,
+               P.A05_nome produto,
+               U.A01_nome responsavel,
+               F.A11_nome fornecedor
+        FROM MOVIMENTACAO_ESTOQUE_09 M
+        JOIN PRODUTO_05 P ON P.A05_codigo=M.A05_codigo
+        JOIN USUARIO_01 U ON U.A01_codigo=M.A01_codigo
+        LEFT JOIN FORNECEDOR_11 F ON F.A11_codigo=M.A11_codigo
+        ORDER BY M.A09_data DESC, M.A09_codigo DESC
+        LIMIT 100
+        """);
     }
 
     // CONSULTAS INDIVIDUAIS
@@ -127,6 +142,22 @@ public class JoalheriaRepository {
             FROM CLIENTE_06
             WHERE A06_codigo=?
             """, codigo);
+
+        return l.isEmpty() ? null : l.get(0);
+    }
+
+    public Map<String, Object> fornecedor(int codigo) {
+        List<Map<String, Object>> l = jdbc.queryForList("""
+        SELECT A11_codigo codigo,
+               A11_nome nome,
+               A11_cnpj cnpj,
+               A11_telefone telefone,
+               A11_email email,
+               A11_endereco endereco,
+               A11_ativo ativo
+        FROM FORNECEDOR_11
+        WHERE A11_codigo=?
+        """, codigo);
 
         return l.isEmpty() ? null : l.get(0);
     }
@@ -350,18 +381,49 @@ public class JoalheriaRepository {
         jdbc.update("CALL PROC_DEL_CLIENTE(?)", id);
     }
 
+    // FORNECEDORES
+
+    public void inserirFornecedor(FornecedorForm f) {
+        jdbc.update(
+                "CALL PROC_INS_FORNECEDOR(?,?,?,?,?)",
+                f.nome,
+                f.cnpj,
+                limpar(f.telefone),
+                limpar(f.email),
+                limpar(f.endereco)
+        );
+    }
+
+    public void atualizarFornecedor(int id, FornecedorForm f) {
+        jdbc.update(
+                "CALL PROC_UPD_FORNECEDOR(?,?,?,?,?,?,?)",
+                id,
+                f.nome,
+                f.cnpj,
+                limpar(f.telefone),
+                limpar(f.email),
+                limpar(f.endereco),
+                f.ativo
+        );
+    }
+
+    public void desativarFornecedor(int id) {
+        jdbc.update("CALL PROC_DEL_FORNECEDOR(?)", id);
+    }
+
     // ESTOQUE
 
     @Transactional
     public void entradaEstoque(
-            int produto, int usuario, int quantidade, String obs) {
+            int produto, int usuario, int quantidade, String obs, Integer fornecedor) {
 
         jdbc.update(
-                "CALL PROC_ENTRADA_ESTOQUE(?,?,?,?)",
+                "CALL PROC_ENTRADA_ESTOQUE(?,?,?,?,?)",
                 produto,
                 usuario,
                 quantidade,
-                limpar(obs)
+                limpar(obs),
+                fornecedor
         );
     }
 

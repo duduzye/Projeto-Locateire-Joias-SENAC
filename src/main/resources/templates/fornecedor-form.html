@@ -1,0 +1,14 @@
+<!DOCTYPE html><html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Cadastro de fornecedor')}"></head><body>
+<div class="app"><aside th:replace="~{fragments/layout :: menu('fornecedores')}"></aside><main class="content">
+    <header th:replace="~{fragments/layout :: topo('Cadastro de fornecedor','Registre os dados de quem fornece suas joias.')}"></header>
+    <div th:replace="~{fragments/layout :: alertas}"></div>
+    <section class="panel form-panel"><form th:action="@{/fornecedores/salvar}" th:object="${fornecedorForm}" method="post"><input type="hidden" name="id" th:if="${editando != null}" th:value="${editando}">
+        <h2 th:text="${editando == null ? 'Novo fornecedor' : 'Editar fornecedor'}"></h2><div class="form-grid">
+            <label class="full">Nome *<input th:field="*{nome}" required maxlength="150" placeholder="Nome do fornecedor"><small class="field-error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></small></label>
+            <label>CNPJ (somente números) *<input th:field="*{cnpj}" required maxlength="14" inputmode="numeric" placeholder="14 dígitos"><small class="field-error" th:if="${#fields.hasErrors('cnpj')}" th:errors="*{cnpj}"></small></label>
+            <label>Telefone (somente números)<input th:field="*{telefone}" maxlength="11" inputmode="numeric" placeholder="DDD + número"><small class="field-error" th:if="${#fields.hasErrors('telefone')}" th:errors="*{telefone}"></small></label>
+            <label class="full">E-mail<input th:field="*{email}" type="email" maxlength="100" placeholder="fornecedor@exemplo.com"><small class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small></label>
+            <label class="full">Endereço<input th:field="*{endereco}" maxlength="255" placeholder="Rua, número, cidade"><small class="field-error" th:if="${#fields.hasErrors('endereco')}" th:errors="*{endereco}"></small></label>
+            <label th:if="${editando != null}" class="checkbox-label"><input type="checkbox" th:field="*{ativo}"> Fornecedor ativo</label>
+        </div><div class="form-actions"><a class="btn btn-outline" th:href="@{/fornecedores}">Cancelar</a><button class="btn btn-primary" type="submit">Salvar fornecedor →</button></div></form></section>
+</main></div></body></html>
