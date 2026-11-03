@@ -1,8 +1,8 @@
-package br.com.joalheria.controller;
+package br.com.joalheria.Pck_Controller;
 
-import br.com.joalheria.model.ProdutoForm;
-import br.com.joalheria.repository.JoalheriaRepository;
-import br.com.joalheria.service.Mensagens;
+import br.com.joalheria.Pck_Model.ProdutoForm;
+import br.com.joalheria.Pck_Persistencia.ProdutoPersistencia;
+import br.com.joalheria.Service.Mensagens;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,8 +16,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/produtos")
 public class ProdutoController {
-    private final JoalheriaRepository repo;
-    public ProdutoController(JoalheriaRepository repo){this.repo=repo;}
+    private final ProdutoPersistencia repo;
+    public ProdutoController(ProdutoPersistencia repo){this.repo=repo;}
     @GetMapping public String listar(Model model){model.addAttribute("produtos",repo.produtos());return "produtos";}
     private void opcoes(Model model){
         model.addAttribute("categorias",repo.categorias());model.addAttribute("materiais",repo.materiais());model.addAttribute("pedras",repo.pedras());

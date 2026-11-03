@@ -1,4 +1,4 @@
-package br.com.joalheria.service;
+package br.com.joalheria.Service;
 
 public final class Mensagens {
     private Mensagens() { }
