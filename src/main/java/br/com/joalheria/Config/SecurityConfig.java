@@ -1,4 +1,4 @@
-package br.com.joalheria.config;
+package br.com.joalheria.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,7 +1,8 @@
 
-package br.com.joalheria.controller;
+package br.com.joalheria.Pck_Controller;
 
-import br.com.joalheria.repository.JoalheriaRepository;
+import br.com.joalheria.Pck_Persistencia.EstoquePersistencia;
+import br.com.joalheria.Pck_Persistencia.RelatorioPersistencia;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +12,12 @@ import java.time.LocalDate;
 @Controller
 public class InicioController {
 
-    private final JoalheriaRepository repo;
+    private final RelatorioPersistencia relatorio;
+    private final EstoquePersistencia estoque;
 
-    public InicioController(JoalheriaRepository repo) {
-        this.repo = repo;
+    public InicioController(RelatorioPersistencia relatorio, EstoquePersistencia estoque) {
+        this.relatorio = relatorio;
+        this.estoque = estoque;
     }
 
     @GetMapping("/")
@@ -51,20 +54,20 @@ public class InicioController {
 
         // INDICADORES GERAIS
         model.addAttribute("indicadores",
-                repo.dashboard(dataInicio, dataFim));
+                relatorio.dashboard(dataInicio, dataFim));
 
         // VENDAS DO PERÍODO
         model.addAttribute("vendas",
-                repo.dashboardDetalhado(dataInicio, dataFim));
+                relatorio.dashboardDetalhado(dataInicio, dataFim));
 
         // RANKING DOS PRODUTOS MAIS VENDIDOS
         model.addAttribute("maisVendidos",
-                repo.produtosMaisVendidos(dataInicio, dataFim));
+                relatorio.produtosMaisVendidos(dataInicio, dataFim));
 
         // NOVA FUNCIONALIDADE DO PI:
         // ANÁLISE INTELIGENTE DE ESTOQUE
         model.addAttribute("analiseEstoque",
-                repo.analiseEstoque(dataInicio, dataFim));
+                estoque.analiseEstoque(dataInicio, dataFim));
 
         return "dashboard";
     }

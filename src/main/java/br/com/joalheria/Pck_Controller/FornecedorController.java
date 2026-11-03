@@ -1,8 +1,8 @@
-package br.com.joalheria.controller;
+package br.com.joalheria.Pck_Controller;
 
-import br.com.joalheria.model.FornecedorForm;
-import br.com.joalheria.repository.JoalheriaRepository;
-import br.com.joalheria.service.Mensagens;
+import br.com.joalheria.Pck_Model.FornecedorForm;
+import br.com.joalheria.Pck_Persistencia.FornecedorPersistencia;
+import br.com.joalheria.Service.Mensagens;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +14,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/fornecedores")
 public class FornecedorController {
-    private final JoalheriaRepository repo;
-    public FornecedorController(JoalheriaRepository repo){this.repo=repo;}
+    private final FornecedorPersistencia repo;
+    public FornecedorController(FornecedorPersistencia repo){this.repo=repo;}
     @GetMapping public String listar(Model model){model.addAttribute("fornecedores",repo.fornecedores());return "fornecedores";}
     @GetMapping("/novo") public String novo(Model model){model.addAttribute("fornecedorForm",new FornecedorForm());return "fornecedor-form";}
     @GetMapping("/{id}/editar") public String editar(@PathVariable int id,Model model){

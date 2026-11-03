@@ -1,8 +1,8 @@
-package br.com.joalheria.controller;
+package br.com.joalheria.Pck_Controller;
 
-import br.com.joalheria.model.ClienteForm;
-import br.com.joalheria.repository.JoalheriaRepository;
-import br.com.joalheria.service.Mensagens;
+import br.com.joalheria.Pck_Model.ClienteForm;
+import br.com.joalheria.Pck_Persistencia.ClientePersistencia;
+import br.com.joalheria.Service.Mensagens;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +14,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/clientes")
 public class ClienteController {
-    private final JoalheriaRepository repo;
-    public ClienteController(JoalheriaRepository repo){this.repo=repo;}
+    private final ClientePersistencia repo;
+    public ClienteController(ClientePersistencia repo){this.repo=repo;}
     @GetMapping public String listar(Model model){model.addAttribute("clientes",repo.clientes());return "clientes";}
     @GetMapping("/novo") public String novo(Model model){model.addAttribute("clienteForm",new ClienteForm());return "cliente-form";}
     @GetMapping("/{id}/editar") public String editar(@PathVariable int id,Model model){

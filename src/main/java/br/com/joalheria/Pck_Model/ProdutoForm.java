@@ -1,4 +1,4 @@
-package br.com.joalheria.model;
+package br.com.joalheria.Pck_Model;
 
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
